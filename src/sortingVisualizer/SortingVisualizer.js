@@ -1,13 +1,14 @@
 import React from 'react';
 import {getMergeSortAnimations} from './sortingAlgos/mergeSort';
 import {getBubbleSortAnimations} from './sortingAlgos/bubbleSort';
+import { quickSortAnimations } from './sortingAlgos/quickSort';
 import './SortingVisualizer.css';
 
 // Change this value for the speed of the animations.
 const ANIMATION_SPEED_MS = 1;
 
 // Change this value for the number of bars (value) in the array.
-const NUMBER_OF_ARRAY_BARS = 400;
+const NUMBER_OF_ARRAY_BARS = 50;
 
 // This is the main color of the array bars.
 const PRIMARY_COLOR = 'turquoise';
@@ -60,12 +61,36 @@ export default class SortingVisualizer extends React.Component {
     }
   }
   async bubbleSort() {
-    const sorted = await getBubbleSortAnimations(this.state.array);
-    this.setState({sorted});
+    const sorted = getBubbleSortAnimations(this.state.array);
+    this.setState(sorted);
   }
 
-  quickSort() {
-    // We leave it as an exercise to the viewer of this code to implement this method.
+  async quickSort() {
+    var startIndex = 0;
+    var endIndex = this.state.array.length -1;
+
+    const animations = quickSortAnimations(this.state.array, startIndex, endIndex, []);
+    this.setState(animations);
+    for(let i = 0; i < animations.length; i++){
+      const arrayBars = document.getElementsByClassName('array-bar');
+
+      if (animations[i][2] == "compare") {
+        const [barOneIdx, barTwoIdx] = animations[i];
+        const barOneStyle = arrayBars[barOneIdx].style;
+        const barTwoStyle = arrayBars[barTwoIdx].style;
+        const color = PRIMARY_COLOR;
+        setTimeout(() => {
+          barOneStyle.backgroundColor = color;
+          barTwoStyle.backgroundColor = color;
+        }, i * ANIMATION_SPEED_MS);
+      } else {
+        setTimeout(() => {
+          const [barOneIdx, newHeight] = animations[i];
+          const barOneStyle = arrayBars[barOneIdx].style;
+          barOneStyle.height = `${newHeight}px`;
+        }, i * ANIMATION_SPEED_MS);
+      }
+  }
   }
 
   heapSort() {

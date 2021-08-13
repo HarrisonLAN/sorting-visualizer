@@ -1,5 +1,4 @@
 export async function getBubbleSortAnimations(inputArr){
-    var container = document.getElementsByClassName("array-container");
     var blocks = document.getElementsByClassName('array-bar');
   
     // BubbleSort Algorithm
